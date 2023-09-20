@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:17.0.1
+    restart: unless-stopped
+    env_file:
+      - ./keycloak-postgres.env
+    environment:
+      #JAVA_OPTS_APPEND: -Dkeycloak.migration.strategy=OVERWRITE_EXISTING
+      JAVA_OPTS_APPEND: -Dkeycloak.migration.strategy=IGNORE_EXISTING
+    entrypoint: /opt/keycloak/bin/kc.sh start --auto-build
+    #command: start-dev
+    volumes:
+      - /run/media/byron/Vm/volumes/certs/kruger/Kruger.crt:/opt/keycloak/conf/server.crt.pem
+      - /run/media/byron/Vm/volumes/certs/kruger/Kruger.key:/opt/keycloak/conf/server.key.pem
+    hostname: keycloaklocal.krugercorp.com
+    ports:
+      - 8080:8080
+      - 8443:8443
